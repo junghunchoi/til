@@ -1,0 +1,46 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: order-service
+  
+  datasource:
+    url: jdbc:h2:mem:orderdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  
+  cloud:
+    function:
+      definition: inventoryResponse
+    stream:
+      bindings:
+        orderCreated-out-0:
+          destination: order-events
+          content-type: application/json
+        inventoryResponse-in-0:
+          destination: inventory-events
+          content-type: application/json
+          group: order-service-group
+      kafka:
+        binder:
+          brokers: localhost:9092
+
+logging:
+  level:
+    com.example.orderservice: DEBUG
+    org.springframework.transaction: DEBUG

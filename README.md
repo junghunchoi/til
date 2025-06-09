@@ -15,6 +15,15 @@
 - 인프라/운영
 
 ### 1.1 공통
+## 디자인패턴
+- [싱글톤 패턴](cs/common/designpattern/singleton.md)
+- 팩토리 패턴
+- 프록시 패턴
+- 어댑터 패턴
+- 옵저버 패턴
+- 전략 패턴
+- 템플릿 메소드 패턴
+- 데코레이터 패턴
 
 
 ### 1.2 Spring
@@ -31,6 +40,7 @@
 - 스프링 애플리케이션 성능 최적화 경험과 방법
 - 캐싱 전략과 스프링의 캐시 추상화 사용법
 - 대용량 트래픽 처리를 위한 스프링 기반 아키텍처 설계 방법
+- 스프링에서 @Transactional의 전파 속성(Propagation)에 대해 설명해주세요
 
 
 ### 1.3 Jpa
@@ -41,6 +51,12 @@
 - [N+1 문제와 해결책](cs/spring/spring_jpa_n1.md)
     - 패치조인과 조인의 차이점을 알고 계신가요?
 - [JPA OSIV(Open Session In View) 설정](cs/spring/spring_jpa_osiv.md)
+- [1차 캐시의 동작 원리와 장단점은?]
+- dirty checking은 어떻게 동작하나요?
+- detached 상태의 엔티티를 다시 관리 상태로 만드는 방법은?
+- N+1 문제가 발생하는 원리와 해결 방법들을 설명해주세요
+- @EntityGraph와 fetch join의 차이점은?
+- 지연 로딩과 즉시 로딩을 언제 사용하나요?
 
 
 ### 1.4 Java
@@ -75,6 +91,14 @@
 - [Dirty Read, Non-Repeatable Read, Phantom Read, Gap Lock](cs/database/db_mysql_gaplock.md)
 - [**MySQL MVCC 방식과 Undo Log에 대해 설명해주세요.**](cs/database/db_mysql_mvcc.md)
 - [비관적 락과 낙관적 락에 대해 설명해주세요.](cs/database/db_lock.md)
+- 대용량 데이터 처리 시 페이징 성능을 개선하는 방법은?
+- 배치 처리에서 메모리 효율적인 방법은?
+- 통계성 쿼리의 성능을 개선한 경험이 있다면 공유해주세요
+- 복합 인덱스 설계 시 컬럼 순서가 중요한 이유는?
+- 커버링 인덱스란 무엇이고 언제 사용하나요?
+- 실행계획을 보고 쿼리 성능을 분석한 경험이 있나요?
+- 트랜잭션의 격리 수준(Isolation Level)에 대해 설명하고, 각각의 문제점은 무엇인가요?
+- 데드락이 발생하는 상황과 해결방법은?
 
 ### 1.6 인프라/운영
 - [**모니터링 및 Alert 구축 시 고려사항**](cs/infra/infra_monitoring_alert.md)
