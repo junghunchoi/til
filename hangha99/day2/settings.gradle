@@ -1,5 +1,0 @@
-settings.gradle
-rootProject.name = 'distributed-transaction-example'
-
-include 'order-service'
-include 'inventory-service'
