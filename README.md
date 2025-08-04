@@ -16,8 +16,8 @@
 
 ### 1.1 공통
 ## 디자인패턴
-- [싱글톤 패턴](cs/common/designpattern/singleton.md)
-- [팩토리 패턴]()
+- [싱글톤 패턴](cs/common/designpattern/싱글턴-패턴.md)
+- [팩토리 패턴](cs/common/designpattern/팩토리-패턴.md)
 - [프록시 패턴]()
 - [어댑터 패턴]()
 - [옵저버 패턴]()
@@ -74,9 +74,8 @@
 
 
 ### 1.4 Java
-- [**알아두면 좋을 JVM Option**](cs/java/jvm_options.md)
-- [**JVM 옵션에서 Xmx, Xms를 동일하게 설정하는 이유**](cs/java/java_jvm_xmx_xms.md)
-- [**Java의 Object 클래스의 Equals() 메서드와 HashCode() 메서드가 무슨 목적인지 설명해주세요.**](cs/java/java_equals_hascode.md)
+- [**알아두면 좋을 JVM Option**]()
+- [**JVM 옵션에서 Xmx, Xms를 동일하게 설정하는 이유**]()
 - [자료구조 및 Java 컬렉션. with 동적 크기 조정](cs/java/java_%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0_%EC%BB%AC%EB%A0%89%EC%85%98.md)
 - [synchronized 와 ReentrantLock](cs/java/java_synchronized_ReentrantLock.md)
 - [**Synchronized는 어떤 내부 원리로 락을 동작시키는지 설명해주세요.**(뮤텍스락)](cs/java/how_synchronized.md)
@@ -101,10 +100,10 @@
 
 ### 1.5 Database
 - [RDBMS vs NoSQL 특성과 하이브리드 아키텍처 설계](cs/database/db-comparison-architecture.md)
-- [데이터베이스 인덱스 설계와 성능 최적화](cs/database/db-index-optimization.md)
+- [데이터베이스 인덱스 설계와 성능 최적화](cs/database/index최적화.md)
 - [MySQL MVCC와 트랜잭션 격리 수준](cs/database/db-mysql-mvcc-isolation.md)
 - [낙관적 락 vs 비관적 락 실제 구현과 성능 비교](cs/database/db-locking-strategies.md)
-- [대용량 데이터 처리와 페이징 최적화](cs/database/db-large-data-processing.md)
+- [대용량 데이터 처리와 페이징 최적화](cs/database/대용량데이터처리와-페이징최적화.md)
 - [데이터베이스 샤딩과 파티셔닝 전략](cs/database/db-sharding-partitioning.md)
 - [복제(Replication)와 고가용성 설계](cs/database/db-replication-ha.md)
 - [쿼리 실행 계획 분석과 성능 튜닝](cs/database/db-query-performance.md)
