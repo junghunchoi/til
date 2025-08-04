@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # 여기에 추가적인 타겟들을 설정할 수 있습니다.
+  # 예: Spring Boot 애플리케이션 모니터링
+  # - job_name: 'spring-boot'
+  #   metrics_path: '/actuator/prometheus'
+  #   static_configs:
+  #     - targets: ['host.docker.internal:8080']
+
+  # 호스트 시스템 모니터링을 위한 node-exporter
+  # - job_name: 'node-exporter'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']

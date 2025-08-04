@@ -1,6 +1,5 @@
 package com.emoney.cs.common.designpattern.adapter;
 
-import org.springframework.http.converter.json.GsonBuilderUtils;
 
 public class AudioPlayer implements MediaPlayer{
     private MediaPlayer mediaPlayer;
