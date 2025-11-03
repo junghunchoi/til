@@ -57,7 +57,7 @@
 - [JPA 쿼리 최적화 전략 (페치 조인, 배치 사이즈, 서브그래프)](cs/jpa/jpa-query-optimization.md)
 - [JPA 2차 캐시와 분산 캐시 전략](cs/jpa/jpa-second-level-cache.md)
 - [대용량 데이터 처리를 위한 JPA 배치 처리 기법](cs/jpa/jpa-batch-processing.md)
-- [JPA OSIV(Open Session In View)와 성능 고려사항](cs/jpa/jpa-osiv.md)
+- [왜 엔티티는 표현계층에 전달하면 안될까](cs/jpa/왜 엔티티는 표현계층에 전달하면 안될까.md)
 - [복잡한 쿼리 처리: QueryDSL vs Criteria vs Native Query](cs/jpa/jpa-complex-queries.md)
 - [JPA 상속 전략과 성능 비교](cs/jpa/jpa-inheritance-strategies.md)
 - [JPA vs MyBatis vs Spring Data JDBC 비교와 선택 기준]()

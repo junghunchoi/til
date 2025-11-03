@@ -652,6 +652,199 @@ public List<Order> findOrdersWithConditions(OrderSearchCondition condition) {
 }
 ```
 
+## 실무에서 Fetch Join을 더 많이 사용하는 이유
+
+1. 명시성과 가독성
+
+   ```java
+        // Fetch Join - 쿼리가 명확하게 보임
+        @Query("SELECT o FROM Order o JOIN FETCH o.customer JOIN FETCH o.orderItems")                                   
+        List<Order> findAllWithDetails();
+        
+        // @EntityGraph - 어떤 쿼리가 실행될지 예측하기 어려움
+        @EntityGraph(attributePaths = {"customer", "orderItems"})                                                       
+        List<Order> findAll();
+    ``` 
+   
+Fetch Join이 선호되는 이유:
+- JPQL 쿼리로 명시적으로 작성되어 의도가 명확함
+- 실행될 SQL을 예측하기 쉬움
+- 코드 리뷰 시 로딩 전략을 한눈에 파악 가능
+
+2. 세밀한 제어 가능
+    ```java
+    // Fetch Join - WHERE, ORDER BY 등 조건 추가 가능
+    @Query("SELECT DISTINCT o FROM Order o " +
+    "JOIN FETCH o.customer c " +
+    "JOIN FETCH o.orderItems oi " +
+    "WHERE c.status = 'ACTIVE' " +
+    "AND oi.quantity > 0 " +
+    "ORDER BY o.createdAt DESC")
+    List<Order> findActiveOrdersWithItems();
+    
+    // @EntityGraph - 복잡한 조건 처리가 어려움
+    @EntityGraph(attributePaths = {"customer", "orderItems"})                                                       
+    @Query("SELECT o FROM Order o WHERE o.customer.status = 'ACTIVE'")                                              
+    List<Order> findActiveOrders(); // orderItems 필터링 불가
+    ``` 
+3. 성능 최적화 가능성
+
+// Fetch Join - LEFT/INNER JOIN 선택 가능
+@Query("SELECT o FROM Order o " +
+"INNER JOIN FETCH o.customer " +        // INNER JOIN                                                    
+"LEFT JOIN FETCH o.orderItems")         // LEFT JOIN                                                     
+List<Order> findOrders();
+
+// @EntityGraph - 항상 LEFT OUTER JOIN 사용
+@EntityGraph(attributePaths = {"customer", "orderItems"})                                                       
+List<Order> findAll(); // 무조건 LEFT OUTER JOIN
+
+성능 차이:
+- Fetch Join은 상황에 따라 INNER/LEFT JOIN 선택 가능
+- @EntityGraph는 항상 LEFT OUTER JOIN 사용 → 불필요한 데수 있음
+
+4. 쿼리 최적화 도구와의 호환성
+
+// QueryDSL과 함께 사용하기 좋음
+public List<Order> findOrdersOptimized(OrderSearchCondition condition) {                                        
+return queryFactory
+.selectFrom(order)
+.leftJoin(order.customer, customer).fetchJoin()
+.leftJoin(order.orderItems, orderItem).fetchJoin()
+.where(
+statusEq(condition.getStatus()),
+dateGoe(condition.getStartDate())
+)
+.fetch();
+}
+
+  ---
+그렇다면 @EntityGraph는 언제 사용하나?
+
+1. 간단한 조회에서 코드 간결성
+
+// 조건 없이 단순 조회 시 코드가 간결함
+@EntityGraph(attributePaths = {"customer"})
+Optional<Order> findById(Long id);
+
+// Fetch Join으로 작성하면
+@Query("SELECT o FROM Order o JOIN FETCH o.customer WHERE o.id = :id")                                          
+Optional<Order> findByIdWithCustomer(@Param("id") Long id);
+
+2. Spring Data JPA 쿼리 메서드 활용
+
+// 메서드 이름 기반 쿼리 + @EntityGraph
+@EntityGraph(attributePaths = {"customer", "orderItems"})                                                       
+List<Order> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+// Fetch Join은 @Query 필수
+@Query("SELECT o FROM Order o " +
+"JOIN FETCH o.customer " +
+"WHERE o.createdAt BETWEEN :start AND :end")
+List<Order> findByCreatedAtBetween(@Param("start") LocalDateTime start,                                         
+@Param("end") LocalDateTime end);
+
+3. Named EntityGraph로 재사용성 향상
+
+@Entity
+@NamedEntityGraph(
+name = "Order.withDetails",
+attributeNodes = {
+@NamedAttributeNode("customer"),
+@NamedAttributeNode("orderItems")
+}
+)
+public class Order { ... }
+
+// 여러 곳에서 재사용
+@EntityGraph("Order.withDetails")
+List<Order> findByStatus(OrderStatus status);
+
+@EntityGraph("Order.withDetails")
+List<Order> findByCustomerId(Long customerId);
+
+  ---
+실무 권장 사항
+
+✅ Fetch Join을 사용하는 경우 (70-80%)
+
+1. 복잡한 조건이 있는 조회
+2. JOIN 타입 제어가 필요한 경우
+3. WHERE, ORDER BY 등 추가 조건 필요
+4. QueryDSL과 함께 사용
+5. 성능 최적화가 중요한 핵심 쿼리
+
+// 실무에서 가장 많이 사용되는 패턴
+@Query("SELECT DISTINCT o FROM Order o " +
+"JOIN FETCH o.customer c " +
+"LEFT JOIN FETCH o.orderItems oi " +
+"WHERE o.status = :status " +
+"AND o.createdAt >= :startDate")
+List<Order> findActiveOrders(@Param("status") OrderStatus status,                                               
+@Param("startDate") LocalDateTime startDate);
+
+✅ @EntityGraph를 사용하는 경우 (20-30%)
+
+1. 단순 조회 (조건 없음)
+2. Spring Data JPA 메서드 쿼리 활용
+3. 코드 간결성이 중요한 경우
+4. Named EntityGraph로 재사용성 확보
+
+// 간단한 ID 조회
+@EntityGraph(attributePaths = {"customer", "orderItems"})                                                       
+Optional<Order> findById(Long id);
+
+// Spring Data 메서드 쿼리 활용
+@EntityGraph(attributePaths = {"customer"})
+List<Order> findByCustomerEmail(String email);
+
+  ---
+성능 비교
+
+두 방식의 성능 차이는 거의 없습니다. 둘 다 결국 같은 SQL을 생성하기 때문입니다.
+
+-- 두 방식 모두 동일한 SQL 생성
+SELECT o.*, c.*, oi.*
+FROM orders o
+LEFT OUTER JOIN customers c ON o.customer_id = c.id
+LEFT OUTER JOIN order_items oi ON o.id = oi.order_id
+
+차이점은:
+- Fetch Join: INNER/LEFT JOIN 선택 가능
+- @EntityGraph: 항상 LEFT OUTER JOIN
+
+  ---
+면접 답변 정리
+
+질문: "N+1 해결을 위해 Fetch Join과 @EntityGraph 중 어떤나요?"
+
+모범 답변:
+
+"실무에서는 Fetch Join을 70-80% 정도 더 많이 사용합니다.
+
+주된 이유는:
+1. 명시성: JPQL로 명확하게 작성되어 의도가 분명함
+2. 세밀한 제어: WHERE, ORDER BY, INNER/LEFT JOIN 선택 등적화 가능
+3. QueryDSL 호환성: 동적 쿼리 작성 시 유리
+
+다만 @EntityGraph도 적재적소에 사용합니다:
+- 단순 ID 조회 같이 조건이 없는 경우
+- Spring Data JPA 메서드 쿼리와 함께 사용할 때
+- Named EntityGraph로 재사용성을 높일 때
+
+결론적으로 복잡한 비즈니스 쿼리는 Fetch Join, 간단한 조EntityGraph를 사용하는 것이 일반적인 패턴입니다."
+
+  ---
+추가 꼬리질문 대비
+
+Q: "둘 다 카테시안 곱 문제가 있나요?"
+- 네, 두 방식 모두 2개 이상의 컬렉션을 Fetch할 때 카테시발생
+- 해결책: @BatchSize 또는 다단계 조회 사용
+
+Q: "어떤 게 더 빠른가요?"
+- 성능 차이는 거의 없음
+- Fetch Join이 INNER JOIN 사용 시 약간 더 빠를 수 있음
+
 ## 인터뷰 꼬리질문 대비
 
 ### Q1: "Fetch Join과 @EntityGraph의 차이점은?"
@@ -682,5 +875,3 @@ public List<Order> findOrdersWithConditions(OrderSearchCondition condition) {
 3. **성능 테스트**: 실제 데이터 볼륨으로 성능 테스트 필수
 4. **모니터링**: 운영 환경에서 지속적인 쿼리 성능 모니터링
 5. **점진적 최적화**: 모든 곳에 적용하지 말고 병목점 위주로 최적화
-
-N+1 문제는 JPA 사용 시 가장 흔히 발생하는 성능 문제입니다. 다양한 해결 방법을 상황에 맞게 적절히 조합하여 사용하는 것이 중요합니다.
