@@ -127,6 +127,11 @@
 - [이벤트 드리븐 아키텍처와 메시지 큐](cs/microservices/event-driven-architecture.md)
 - [API 게이트웨이와 서비스 메시(Service Mesh)](cs/microservices/api-gateway-service-mesh.md)
 - [분산 시스템에서의 데이터 일관성 패턴](cs/microservices/distributed-data-consistency.md)
+- 대규모 트래픽 환경에서 발생할 수 있는 문제점들
+  분산 환경에서의 데이터 정합성 보장 방법
+  시스템 과부하 상황에 대한 대응 방안
+  확장성을 고려한 아키텍처 설계
+
 
 ### 1.7 인프라/운영
 - [애플리케이션 모니터링과 성능 튜닝](cs/infra/infra-monitoring-performance.md)
