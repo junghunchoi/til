@@ -52,7 +52,7 @@
 
 ### 1.3 JPA/ORM
 - [JPA와 Hibernate의 내부 동작 원리와 성능 튜닝](cs/jpa/jpa-hibernate-internals.md)
-- [N+1 문제의 원인과 다양한 해결 방법](cs/jpa/jpa-n-plus-one.md)
+- [N+1 문제의 원인과 다양한 해결 방법](cs/jpa/N+1%20문제의%20원인과%20다양한%20해결%20방법.md)
 - [영속성 컨텍스트와 1차 캐시의 동작 원리](cs/jpa/jpa-persistence-context.md)
 - [JPA 쿼리 최적화 전략 (페치 조인, 배치 사이즈, 서브그래프)](cs/jpa/jpa-query-optimization.md)
 - [JPA 2차 캐시와 분산 캐시 전략](cs/jpa/jpa-second-level-cache.md)
